@@ -1,0 +1,72 @@
+const express = require("express");
+const cors = require("cors");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+const app = express();
+const port = 3000;
+
+app.use(cors());
+app.use(express.json());
+
+const uri =
+  "mongodb+srv://library-db:4gskVeEnd02fDJVo@cluster0.zyoungn.mongodb.net/?appName=Cluster0";
+
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  },
+});
+
+async function run() {
+  try {
+    await client.connect();
+    const db = client.db("Book-db");
+    const booksCollecton = db.collection("books");
+
+    //find allbooks from mongodb
+    app.get("/books", async (req, res) => {
+      const result = await booksCollecton.find().toArray();
+      res.send(result);
+    });
+
+    //post: Add Books
+    app.post("/books", async (req, res) => {
+      const data = req.body;
+      // console.log(data);
+      const result = await booksCollecton.insertOne(data);
+      res.send({
+        success: true,
+        result,
+      });
+    });
+
+    //Get: view Details By Id
+    app.get("/books/:id", async (req, res) => {
+      const { id } = req.params;
+      const objectId = new ObjectId(id);
+      const result = await booksCollecton.findOne({ _id: objectId });
+      res.send({
+        success: true,
+        result,
+      });
+    });
+
+    await client.db("admin").command({ ping: 1 });
+    console.log(
+      "Pinged your deployment. You successfully connected to MongoDB!"
+    );
+  } finally {
+    // await client.close();
+  }
+}
+run().catch(console.dir);
+
+app.get("/", (req, res) => {
+  res.send("Serve is running fine!");
+});
+
+app.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
+});
