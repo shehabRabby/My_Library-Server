@@ -69,6 +69,25 @@ async function run() {
       });
     });
 
+    //Get: latest-book show home page
+    app.get("/latest-books", async (req, res) => {
+      const result = await booksCollecton
+        .find()
+        .sort({ _id: "asc" })
+        .limit(10)
+        .toArray();
+      res.send(result);
+    });
+
+    //Get: Search Book Name
+    app.get("/search", async (req, res) => {
+      const search_title = req.query.search;
+      const result = await booksCollecton
+        .find({ title: { $regex: search_title, $options: "i" } })
+        .toArray();
+      res.send(result);
+    });
+
     await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
