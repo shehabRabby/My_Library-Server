@@ -100,6 +100,13 @@ async function run() {
       });
     });
 
+    //Get: My-Books collection API
+    app.get("/my-book", async (req, res) => {
+      const email = req.query.email;
+      const result = await booksCollecton.find({ userEmail: email }).toArray();
+      res.send(result);
+    });
+
     await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
