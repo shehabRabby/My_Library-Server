@@ -53,7 +53,7 @@ async function run() {
       });
     });
 
-    //Put: update book
+    //Put: update bookss
     app.put("/books/:id", async (req, res) => {
       const { id } = req.params;
       const data = req.body;
