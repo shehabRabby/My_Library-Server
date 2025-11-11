@@ -74,7 +74,7 @@ async function run() {
       const result = await booksCollecton
         .find()
         .sort({ _id: "asc" })
-        .limit(10)
+        .limit(6)
         .toArray();
       res.send(result);
     });
