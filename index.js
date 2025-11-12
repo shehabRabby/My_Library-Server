@@ -107,6 +107,21 @@ async function run() {
       res.send(result);
     });
 
+    // Get: All books sorted by rating (Desc default) not work
+    app.get("/booksSort/sort", async (req, res) => {
+      try {
+        const order = req.query.order === "asc" ? 1 : -1;
+        const result = await booksCollecton
+          .find()
+          .sort({ rating: order })
+          .toArray();
+        res.json(result);
+      } catch (err) {
+        console.error("Sort error:", err);
+        res.status(500).json({ success: false, message: "Server Error" });
+      }
+    });
+
     await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
