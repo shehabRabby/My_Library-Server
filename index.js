@@ -1,11 +1,17 @@
 const express = require("express");
 const cors = require("cors");
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+const admin = require("firebase-admin");
+const serviceAccount = require("./serviceKey.json");
 const app = express();
 const port = 3000;
 
 app.use(cors());
 app.use(express.json());
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
 
 const uri =
   "mongodb+srv://library-db:4gskVeEnd02fDJVo@cluster0.zyoungn.mongodb.net/?appName=Cluster0";
@@ -18,6 +24,27 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   },
 });
+
+//middleware here
+const verifyFirebaseToken = async (req, res, next) => {
+  const authorization = req.headers.authorization;
+
+  if (!authorization) {
+    res.status(401).send({
+      message: "Unauthorized: No token provided",
+    });
+  }
+  const token = authorization.split(" ")[1];
+
+  try {
+    await admin.auth().verifyIdToken(token);
+    next();
+  } catch (error) {
+    res.status(401).send({
+      message: "Unauthorized: No token provided",
+    });
+  }
+};
 
 async function run() {
   try {
@@ -42,8 +69,8 @@ async function run() {
       });
     });
 
-    //Get: view Details By Id
-    app.get("/books/:id", async (req, res) => {
+    //Get: view BopkDetails By Id
+    app.get("/books/:id", verifyFirebaseToken, async (req, res) => {
       const { id } = req.params;
       const objectId = new ObjectId(id);
       const result = await booksCollecton.findOne({ _id: objectId });
@@ -101,7 +128,7 @@ async function run() {
     });
 
     //Get: My-Books collection API
-    app.get("/my-book", async (req, res) => {
+    app.get("/my-book", verifyFirebaseToken, async (req, res) => {
       const email = req.query.email;
       const result = await booksCollecton.find({ userEmail: email }).toArray();
       res.send(result);
