@@ -70,7 +70,7 @@ async function run() {
     });
 
     //Get: view BopkDetails By Id
-    app.get("/books/:id", verifyFirebaseToken, async (req, res) => {
+    app.get("/books/:id", async (req, res) => {
       const { id } = req.params;
       const objectId = new ObjectId(id);
       const result = await booksCollecton.findOne({ _id: objectId });
@@ -128,14 +128,14 @@ async function run() {
     });
 
     //Get: My-Books collection API
-    app.get("/my-book", verifyFirebaseToken, async (req, res) => {
+    app.get("/my-book", async (req, res) => {
       const email = req.query.email;
       const result = await booksCollecton.find({ userEmail: email }).toArray();
       res.send(result);
     });
 
     // Get: All books sorted by rating (Desc default) not work
-    app.get("/booksSort/sort", async (req, res) => {
+    app.get("/booksSort/sort",  async (req, res) => {
       try {
         const order = req.query.order === "asc" ? 1 : -1;
         const result = await booksCollecton
