@@ -8,6 +8,10 @@ Built with React, Node.js, MongoDB, and Firebase, it offers secure login, real-t
 
 🔗 [https://my-library-orpin.vercel.app/]
 
+## 🌐 Live Link
+
+🔗 [https://book-haven2.netlify.app/]
+
 ## ⚙️ Tech Stack
 
 - Node.js & Express.js
