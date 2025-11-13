@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const admin = require("firebase-admin");
+require("dotenv").config();
 const serviceAccount = require("./serviceKey.json");
 const app = express();
 const port = 3000;
@@ -13,8 +14,7 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-const uri =
-  "mongodb+srv://library-db:4gskVeEnd02fDJVo@cluster0.zyoungn.mongodb.net/?appName=Cluster0";
+const uri = `mongodb+srv://${process.env.DB_Username}:${process.env.DB_Password}@cluster0.zyoungn.mongodb.net/?appName=Cluster0`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -48,7 +48,7 @@ const verifyFirebaseToken = async (req, res, next) => {
 
 async function run() {
   try {
-    await client.connect();
+    // await client.connect();
     const db = client.db("Book-db");
     const booksCollecton = db.collection("books");
 
@@ -135,7 +135,7 @@ async function run() {
     });
 
     // Get: All books sorted by rating (Desc default) not work
-    app.get("/booksSort/sort",  async (req, res) => {
+    app.get("/booksSort/sort", async (req, res) => {
       try {
         const order = req.query.order === "asc" ? 1 : -1;
         const result = await booksCollecton
@@ -149,7 +149,7 @@ async function run() {
       }
     });
 
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
