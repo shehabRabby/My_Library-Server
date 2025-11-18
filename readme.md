@@ -36,3 +36,32 @@ Built with React, Node.js, MongoDB, and Firebase, it offers secure login, real-t
 | PUT    | /books/:id    | Update book    |
 | DELETE | /books/:id    | Delete book    |
 | GET    | /latest-books | Latest 6 books |
+
+## 🚀 Run Locally
+
+Follow these steps to run the project on your local machine:
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/your-username/your-project.git
+cd your-project
+
+2. Install Dependencies Backend:
+cd backend
+npm install express cors nodemon mongoose dotenv
+cd ..
+3. Backend with Nodemon:
+cd backend
+npm run dev
+4. Setup Environment Variables:
+# Firebase Config
+REACT_APP_FIREBASE_API_KEY=your_firebase_api_key
+REACT_APP_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+REACT_APP_FIREBASE_PROJECT_ID=your_project_id
+REACT_APP_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+REACT_APP_FIREBASE_APP_ID=your_app_id
+
+# MongoDB
+MONGO_URI=your_mongodb_connection_string
+
